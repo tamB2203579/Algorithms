@@ -23,17 +23,26 @@ void freeQueue(Queue *Q) {
     Q->size = 0;
 }
 
+void resize(Queue *Q) {
+    int newCapacity = Q->capacity * 2;
+    int *newData = new int[newCapacity];
+    for (int i = 0; i < Q->size; i++) {
+        newData[i] = Q->data[Q->front + i];
+    }
+    delete[] Q->data;
+    Q->data = newData;
+    Q->capacity = newCapacity;
+    Q->front = 0;
+    Q->rear = Q->size - 1;
+}
+
 bool isEmpty(Queue *Q) {
     return Q->size == 0;
 }
 
-bool isFull(Queue *Q) {
-    return Q->size == Q->capacity;
-}
-
 void enqueue(Queue *Q, int value) {
-    if (isFull(Q)) {
-        cout << "Queue full\n";
+    if (Q->size == Q->capacity) {
+        resize(Q);
     }
     Q->rear++;
     Q->data[Q->rear] = value;
